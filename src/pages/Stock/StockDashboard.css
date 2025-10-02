@@ -1,0 +1,12 @@
+.dashboard-container {
+   padding: 30px;
+   background-color: #f5f5f5;
+   min-height: 100vh;
+}
+
+.dashboard-title {
+   margin: 30px 0 20px;
+   font-size: 20px;
+   font-weight: 600;
+   color: #333;
+}

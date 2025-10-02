@@ -1,0 +1,35 @@
+.ant-btn {
+   padding: 20px;
+   font-size: 1rem;
+   width:min-content;
+}
+
+.ant-form-item-label>label {
+   font-size: 16px;
+   font-weight: bold;
+   /* color: #1890ff; */
+   text-transform: uppercase;
+}
+
+
+.ant-input {
+   padding: 7px;
+   font-size: 1rem;
+}
+
+.ant-select {
+   height: 42px;
+   font-size: 1rem !important;
+}
+
+.ant-select-selector {
+   font-size: 16px !important;
+}
+
+.ant-select-item-option {
+   font-size: 1rem !important;
+}
+
+.ant-select-item-option-selected {
+   background-color: #e6f7ff !important;
+}

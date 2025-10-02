@@ -1,0 +1,94 @@
+/* Center the form in the middle of the screen */
+.login-form {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+   /* border: 1px solid red; */
+}
+
+/* Wrap content in a card-like box */
+.all-items {
+   border: 1px dotted gray;
+   padding: 30px;
+   width: 100%;
+   max-width: 500px;
+   background-color: #fff;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+}
+
+/* Logo styling */
+.logo {
+   display: block;
+   margin: 10px auto 40px;
+   width: 120px;
+   /* border: 1px solid red; */
+}
+
+/* Input field spacing */
+.input-field {
+   padding: 10px;
+}
+
+/* Remember + Forgot Password layout */
+.rem-forgot-inner {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+/* Button spacing */
+.login-btn {
+   text-align: center;
+   margin-top: 10px;
+}
+
+.login-btn button {
+   padding: 20px;
+   width: 100%;
+   font-size: 1rem;
+   font-weight: 500;
+}
+
+/* Centered sign up link */
+.signup-link {
+   text-align: center;
+   margin-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+   .all-items {
+      padding: 20px;
+      margin: 0 15px;
+      box-shadow: none;
+      border: none;
+   }
+
+   .logo {
+      width: 100px;
+      margin: 0 auto 30px;
+   }
+
+   .input-field {
+      padding: 8px;
+      font-size: 0.9rem;
+   }
+
+   .rem-forgot-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+   }
+
+   .login-btn button {
+      padding: 14px;
+      font-size: 0.95rem;
+   }
+
+   .signup-link {
+      font-size: 0.9rem;
+      margin-top: 15px;
+   }
+}

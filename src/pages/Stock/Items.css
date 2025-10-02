@@ -1,0 +1,123 @@
+/* Reset */
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+/* Container */
+.items-container {
+   padding: 20px;
+   max-width: 1200px;
+   margin: auto;
+}
+
+/* Form layout */
+.form-section {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+   gap: 16px;
+   padding: 20px;
+   border: 1px solid #ddd;
+   border-radius: 10px;
+   margin-bottom: 30px;
+   background-color: #fafafa;
+   /* border: 1px solid red; */
+}
+
+/* Button group */
+.btn-group {
+   grid-column: span 4;
+   display: flex;
+   justify-content: flex-start;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+/* Section titles */
+.section-title {
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+/* Filter controls */
+.filter-section {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   margin-bottom: 20px;
+   justify-content: center;
+   flex-wrap: wrap;
+}
+
+/* Table styling */
+.table-section {
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   overflow: hidden;
+   padding: 10px;
+}
+
+/* Bold table headers */
+.table-section .ant-table-thead th {
+   font-weight: bold;
+   background-color: #f5f5f5;
+   text-align: center;
+}
+
+/* Sticky footer logout */
+.logout-section {
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   width: 100%;
+   text-align: center;
+   background-color: #fff;
+   padding: 12px;
+   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-width: 768px) {
+   .items-container {
+      padding: 10px;
+   }
+
+   .form-section {
+      grid-template-columns: 1fr;
+      /* Stack inputs vertically */
+      padding: 10px;
+   }
+
+   .btn-group {
+      grid-column: span 1;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+   }
+
+   .btn-group button {
+      width: 100%;
+      max-width: 300px;
+   }
+
+   .filter-section {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+   }
+
+   .filter-section .ant-select,
+   .filter-section button {
+      width: 100%;
+      max-width: 300px;
+   }
+
+   .table-section {
+      padding: 5px;
+   }
+
+   .logout-section {
+      padding: 10px;
+   }
+}
