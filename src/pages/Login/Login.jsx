@@ -204,8 +204,8 @@ const Login = () => {
           </Button>
         </Form.Item>
         <Form.Item className="login-btn">
-         <Link to="/billing"> <Button type="primary">Seller</Button> </Link> 
-         </Form.Item>
+          <Link to="/billing"> <Button type="primary">Seller</Button> </Link>
+        </Form.Item>
 
         {/* Already Login (centered) */}
         <Form.Item className="signup-link" style={{ textAlign: "center" }}>

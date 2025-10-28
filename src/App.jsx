@@ -10,13 +10,6 @@ import StockReport from './pages/Stock/StockReport'
 import BillingReport from './pages/Billing/BillingReport'
 
 function App() {
-  // useEffect(() => {
-  //   document.body.style.overflow = 'hidden'; // disable window scroll
-
-  //   return () => {
-  //     document.body.style.overflow = 'auto'; // cleanup: scroll wapas enable
-  //   };
-  // }, []);
   return (
     <BrowserRouter>
       <Routes>
