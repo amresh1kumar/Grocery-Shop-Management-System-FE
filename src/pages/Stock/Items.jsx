@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Items.css";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
    Input,
    Form,
@@ -13,6 +13,7 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { FiRefreshCcw } from "react-icons/fi";
 import "../../Components/Common.css";
 import { logout } from "../../api/authService";
+import { ProductsList } from "../../api/productService"
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -20,80 +21,68 @@ const { Option } = Select;
 const clientColumns = [
    {
       title: "ID",
-      dataIndex: "ID",
-      key: "ID",
+      dataIndex: "id",
+      key: "id",
    },
    {
       title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
+      dataIndex: "item_name",
+      key: "item_name",
    },
    {
       title: "Quantity",
-      dataIndex: "Quantity",
-      key: "Quantity",
+      dataIndex: "item_qty",
+      key: "item_qty",
    },
    {
       title: "Price",
-      dataIndex: "Price",
-      key: "Price",
+      dataIndex: "item_price",
+      key: "item_price",
    },
    {
       title: "Category",
-      dataIndex: "Category",
-      key: "Category",
+      dataIndex: "item_category",
+      key: "item_category",
    },
 ];
 
-const clients = [
-   { ID: 1, itemName: "Sunflower Oil", Quantity: 2, Price: 180, Category: "Oil" },
-   { ID: 2, itemName: "Basmati Rice", Quantity: 1, Price: 120, Category: "Rice" },
-   { ID: 3, itemName: "Wheat Flour", Quantity: 3, Price: 150, Category: "Grains" },
-   { ID: 4, itemName: "Toor Dal", Quantity: 2, Price: 140, Category: "Pulses" },
-   { ID: 5, itemName: "Sugar", Quantity: 4, Price: 100, Category: "Essentials" },
-   { ID: 6, itemName: "Milk", Quantity: 6, Price: 60, Category: "Dairy" },
-   { ID: 7, itemName: "Butter", Quantity: 2, Price: 250, Category: "Dairy" },
-   { ID: 8, itemName: "Salt", Quantity: 1, Price: 20, Category: "Essentials" },
-   { ID: 9, itemName: "Chana Dal", Quantity: 3, Price: 130, Category: "Pulses" },
-   { ID: 10, itemName: "Moong Dal", Quantity: 2, Price: 160, Category: "Pulses" },
-   { ID: 11, itemName: "Coconut Oil", Quantity: 1, Price: 220, Category: "Oil" },
-   { ID: 12, itemName: "Green Tea", Quantity: 2, Price: 90, Category: "Beverages" },
-   { ID: 13, itemName: "Coffee", Quantity: 1, Price: 200, Category: "Beverages" },
-   { ID: 14, itemName: "Atta Biscuit", Quantity: 5, Price: 75, Category: "Snacks" },
-   { ID: 15, itemName: "Namkeen", Quantity: 3, Price: 60, Category: "Snacks" }
-];
 
 function Items() {
-   const [selectedCategory, setSelectedCategory] = useState(null);
+   const [products, setProducts] = useState([])
    const navigate = useNavigate()
 
-   const handleLogout=(()=>{
-      logout(); // Token delete ho jayega
-      navigate('/') // User ko login page par bhej de
+   const handlClick = ()=>{
+      navigate('/')
+   }
+
+   const fetchProducts = async () => {
+      try {
+         const res = await ProductsList();
+         setProducts(res.data);
+      } catch (err) {
+         console.error("Fetch error:", err);
+      }
+   };
+
+
+   useEffect(() => {
+      fetchProducts()
+   }, [])
+
+   const handleLogout = (() => {
+      logout();
+      navigate('/')
 
    })
 
-
-
-   const handleChange = (value) => {
-      setSelectedCategory(value);
-   };
-
-   const filteredClients = selectedCategory
-      ? clients.filter(client => client.Category === selectedCategory)
-      : clients;
-
-
-   const resetBtn = ()=>{
-      
-   }
-
-
    return (
       <Form className="items-container" layout="vertical">
-         <h2 className="header-title">Grocery Shop Stocks Page</h2>
+         <div style={{display:'flex', justifyContent:'center' ,gap:'100px'}}>
+            <h2 className="header-title">Grocery Shop Stocks Page</h2>
+            <Button onClick={handlClick}>+ item</Button>
+         </div>
 
-         <div className="form-section">
+         {/* <div className="form-section">
             <Form.Item label="Item Name" name="itemName">
                <Input placeholder="Enter Item Name" />
             </Form.Item>
@@ -125,11 +114,11 @@ function Items() {
                <Button danger>Delete</Button>
                <Button type="default" onClick={resetBtn}>Reset</Button>
             </div>
-         </div>
+         </div> */}
 
-         <Title level={3} className="section-title">Available Stocks</Title>
+         {/* <Title level={3} className="section-title">Available Stocks</Title> */}
 
-         <div className="filter-section">
+         {/* <div className="filter-section">
             <Title level={4}>Filter by Category</Title>
 
             <Select
@@ -138,7 +127,7 @@ function Items() {
                style={{ width: 200 }}
                placeholder="Select Category"
                optionFilterProp="children"
-               onChange={handleChange}
+               // onChange={handleChange}
                filterOption={(input, option) =>
                   option?.children?.toLowerCase().includes(input.toLowerCase())
                }
@@ -160,16 +149,17 @@ function Items() {
             <Link to="/StockDashboard">
                <Button type="primary">Dashboard</Button>
             </Link>
-         </div>
+         </div> */}
 
          <div className="table-section">
             <Table
-               dataSource={filteredClients}
+               dataSource={products}
                columns={clientColumns}
                pagination={false}
                size="small"
-               scroll={{ y: 300 }}
-               rowKey="ID"
+               scroll={{ y: 800 }}
+               rowKey="id"
+
             />
          </div>
 
