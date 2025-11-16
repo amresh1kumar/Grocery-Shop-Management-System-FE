@@ -1,14 +1,14 @@
 import axios from "axios";
 import config from "../config/config";
 
-const API = axios.create({
+const api = axios.create({ 
    baseURL: config.API_BASE_URL,
    headers: {
       "Content-Type": "application/json",
    },
 });
 
-API.interceptors.request.use((req) => {
+api.interceptors.request.use((req) => {
    const token = localStorage.getItem("token");
    if (token && !req.url.includes("register/") && !req.url.includes("login/")) {
       req.headers.Authorization = `Bearer ${token}`;
@@ -16,4 +16,4 @@ API.interceptors.request.use((req) => {
    return req;
 });
 
-export default API;
+export default api;
