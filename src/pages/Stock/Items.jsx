@@ -15,7 +15,7 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { FiRefreshCcw } from "react-icons/fi";
 import "../../Components/Common.css";
 import { logout } from "../../api/authService";
-import { ProductsList, DeleteProduct,UpdateProduct } from "../../api/productService"
+import { ProductsList, DeleteProduct, UpdateProduct } from "../../api/productService"
 import Items_add_form from "./Items_add_form";
 
 function Items() {
@@ -25,10 +25,12 @@ function Items() {
 
    const clientColumns = [
       {
-         title: "ID",
-         dataIndex: "id",
-         key: "id",
+         title: "S.No",
+         key: "sno",
+         render: (text, record, index) => index + 1,
+         width: 80
       },
+
       {
          title: "Item Name",
          dataIndex: "item_name",
@@ -55,12 +57,12 @@ function Items() {
             <>
                <Button
                   type="primary"
-                  style={{ marginRight: "10px" }}
+                  style={{ padding: 0, marginRight: 5, width: 70 }}
                   onClick={() => handleEdit(record)}
                >
-                  Edit
+                  Update
                </Button>
-               <Button danger onClick={() => handleDelete(record.id)}>
+               <Button style={{ padding: 0, width: 70 }} danger onClick={() => handleDelete(record.id)}>
                   Delete
                </Button>
             </>
@@ -71,14 +73,31 @@ function Items() {
    const [products, setProducts] = useState([])
    const [edit, setEdit] = useState(null)
    const [isModalOpen, setIsModalOpen] = useState(false)
+   const [categories, setCategories] = useState([]);
+   const [filters, setFilters] = useState({
+      item_name: "",
+      item_category: "",
+   })
    const [form] = Form.useForm()
    const navigate = useNavigate()
 
 
-   const fetchProducts = async () => {
+   const loadCategories = async () => {
       try {
          const res = await ProductsList();
-         setProducts(res.data);
+
+         const uniqueCats = [...new Set(res.map(p => p.item_category))];
+
+         setCategories(uniqueCats);
+      } catch (err) {
+         console.log("Error loading categories:", err);
+      }
+   };
+
+   const fetchProducts = async () => {
+      try {
+         const res = await ProductsList(filters);
+         setProducts(res);
       } catch (err) {
          console.error("Fetch error:", err);
       }
@@ -101,7 +120,14 @@ function Items() {
          message.error("Update failed!");
       }
    }
+   const handlResetBtn = () => {
+      form.resetFields();
+      setFilters({
+         item_name: "",
+         item_category: ""
+      });
 
+   }
 
    const handleDelete = async (id) => {
       try {
@@ -115,8 +141,12 @@ function Items() {
       }
    }
    useEffect(() => {
-      fetchProducts()
-   }, [])
+      fetchProducts();
+   }, [filters]);
+   
+   useEffect(() => {
+      loadCategories();
+   }, []);
 
    const handleLogout = (() => {
       logout();
@@ -125,8 +155,9 @@ function Items() {
 
    return (
       <div className="items-container">
-         {/* ⬅️ Add Product Form */}
+         {/* Add Product Form */}
          <Items_add_form onSuccess={fetchProducts} />
+
          <Title level={3} className="section-title">Available Stocks</Title>
          <div className="filter-section">
             <Title level={4}>Filter by Category</Title>
@@ -135,21 +166,17 @@ function Items() {
                allowClear
                style={{ width: 200 }}
                placeholder="Select Category"
-               optionFilterProp="children"
-               filterOption={(input, option) =>
-                  option?.children?.toLowerCase().includes(input.toLowerCase())
+               onChange={(value) =>
+                  setFilters((prev) => ({ ...prev, item_category: value || "" }))
                }
             >
-               <Option value="Oil">Oil</Option>
-               <Option value="Rice">Rice</Option>
-               <Option value="Grains">Grains</Option>
-               <Option value="Pulses">Pulses</Option>
-               <Option value="Essentials">Essentials</Option>
-               <Option value="Dairy">Dairy</Option>
-               <Option value="Beverages">Beverages</Option>
-               <Option value="Snacks">Snacks</Option>
+               {categories.map((cat, index) => (
+                  <Option key={index} value={cat}>
+                     {cat}
+                  </Option>
+               ))}
             </Select>
-            <Button className="refresh-btn" onClick={fetchProducts}>
+            <Button className="refresh-btn" onClick={handlResetBtn}>
                <FiRefreshCcw />
             </Button>
             <Link to='/StockReport'>
@@ -166,7 +193,7 @@ function Items() {
                columns={clientColumns}
                pagination={false}
                size="small"
-               scroll={{ y: 800 }}
+               scroll={{ y: 500 }}
                rowKey="id"
             />
          </div>
@@ -178,106 +205,6 @@ function Items() {
                </Button>
             </Link>
          </div>
-
-         {/* Edit Modal */}
-         {/* <Modal
-            title="Edit Author"
-            open={isModalOpen}
-            onOk={handleUpdate}
-            onCancel={() => setIsModalOpen(false)}
-         >
-            <Form form={form} layout="vertical">
-               <Form.Item
-                  name="item_name"
-                  label="Name"
-                  rules={[
-                     { required: true, message: "Please enter name" },
-                     {
-                        validator: (_, value) => {
-                           if (!value) return Promise.resolve();
-                           const isDuplicate = data.some(
-                              (item) => item.item_name.toLowerCase() === value.toLowerCase()
-                           );
-                           return isDuplicate
-                              ? Promise.reject(
-                                 new Error("This name already exists!")
-                              )
-                              : Promise.resolve();
-                        },
-                     },
-                  ]}
-               >
-                  <Input />
-               </Form.Item>
-               <Form.Item
-                  name="item_qty"
-                  label="Qunatity"
-                  rules={[
-                     { required: true, message: "Please enter Qunatity" },
-                     {
-                        validator: (_, value) => {
-                           if (!value) return Promise.resolve();
-                           const isDuplicate = data.some(
-                              (item) => item.item_qty.toLowerCase() === value.toLowerCase()
-                           );
-                           return isDuplicate
-                              ? Promise.reject(
-                                 new Error("This name already exists!")
-                              )
-                              : Promise.resolve();
-                        },
-                     },
-                  ]}
-               >
-                  <Input />
-               </Form.Item>
-               <Form.Item
-                  name="item_price"
-                  label="Price"
-                  rules={[
-                     { required: true, message: "Please enter Price" },
-                     {
-                        validator: (_, value) => {
-                           if (!value) return Promise.resolve();
-                           const isDuplicate = data.some(
-                              (item) => item.item_price.toLowerCase() === value.toLowerCase()
-                           );
-                           return isDuplicate
-                              ? Promise.reject(
-                                 new Error("This name already exists!")
-                              )
-                              : Promise.resolve();
-                        },
-                     },
-                  ]}
-               >
-                  <Input />
-               </Form.Item>
-               <Form.Item
-                  name="item_category"
-                  label="Category"
-                  rules={[
-                     { required: true, message: "Please enter Category" },
-                     {
-                        validator: (_, value) => {
-                           if (!value) return Promise.resolve();
-                           const isDuplicate = data.some(
-                              (item) => item.item_category.toLowerCase() === value.toLowerCase()
-                           );
-                           return isDuplicate
-                              ? Promise.reject(
-                                 new Error("This name already exists!")
-                              )
-                              : Promise.resolve();
-                        },
-                     },
-                  ]}
-               >
-                  <Input />
-               </Form.Item>
-            </Form>
-
-         </Modal> */}
 
          <Modal
             title="Edit Author"

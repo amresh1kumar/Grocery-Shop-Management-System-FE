@@ -1,0 +1,82 @@
+.print-wrapper {
+   width: 340px;
+   padding: 10px;
+   margin: auto;
+   font-family: Arial, sans-serif;
+}
+
+.bill-container {
+   border: 2px solid #333;
+   padding: 10px;
+   position: relative;
+}
+
+.shop-title {
+   text-align: center;
+   font-size: 32px;
+   font-weight: bold;
+   margin: 0;
+}
+
+.shop-address,
+.shop-phone {
+   text-align: center;
+   font-size: 16px;
+   margin: 0;
+}
+
+.bill-header-img {
+   width: 90px;
+   position: absolute;
+   right: 10px;
+   top: 65px;
+}
+
+.invoice-section {
+   margin-top: 20px;
+   font-size: 16px;
+}
+
+.dashed-line {
+   border: none;
+   border-top: 2px dashed #222;
+   margin: 15px 0;
+}
+
+.bill-table {
+   width: 100%;
+   font-size: 18px;
+}
+
+.bill-table td {
+   padding: 5px 0;
+}
+
+.price-col {
+   text-align: right;
+   padding-right: 10px;
+}
+
+.total-section {
+   display: flex;
+   justify-content: flex-end;
+   margin-top: 10px;
+}
+
+.total-text {
+   font-size: 22px;
+   font-weight: bold;
+   margin-right: 10px;
+}
+
+.total-amount {
+   font-size: 24px;
+   font-weight: bolder;
+}
+
+.thankyou-section {
+   text-align: center;
+   margin-top: 20px;
+   font-size: 20px;
+   font-weight: bold;
+}

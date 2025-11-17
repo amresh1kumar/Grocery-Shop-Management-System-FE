@@ -1,14 +1,31 @@
 import api from "./api";
 
-export const ProductsList = async () => {
+// export const ProductsList = async () => {
+//    try {
+//       const res = await api.get("productList/");
+//       return res;
+//    } catch (err) {
+//       console.error("Error fetching:", err);
+//       throw err;
+//    }
+// };
+
+export const ProductsList = async (filters = {}) => {
    try {
-      const res = await api.get("productList/");
-      return res;
+      const res = await api.get("productList/", {
+         params: {
+            item_category: filters.item_category || "",
+            item_name: filters.item_name || "",
+         },
+      });
+
+      return res.data;
    } catch (err) {
       console.error("Error fetching:", err);
-      throw err;
+      return [];
    }
 };
+
 
 export const AddProduct = async (data) => {
    try {

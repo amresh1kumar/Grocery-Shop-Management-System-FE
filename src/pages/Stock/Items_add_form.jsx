@@ -77,28 +77,17 @@ function Items_add_form({ onSuccess }) {
             name="item_category"
             rules={[{ required: true, message: 'Please select category!' }]}
          >
-            <Select placeholder='Select Category'>
-               <Option value="Oil">Oil</Option>
-               <Option value="Rice">Rice</Option>
-               <Option value="Grains">Grains</Option>
-               <Option value="Pulses">Pulses</Option>
-               <Option value="Essentials">Essentials</Option>
-               <Option value="Dairy">Dairy</Option>
-               <Option value="Beverages">Beverages</Option>
-               <Option value="Snacks">Snacks</Option>
-               <Option value="Personal Care">Personal Care</Option>
-               <Option value="Household">Household</Option>
-            </Select>
+            <Input placeholder="Enter Item Category" />
          </Form.Item>
 
          <Form.Item 
          label="Action"
          >
-            <Button type="primary" htmlType="submit">
+            <Button style={{ marginRight:5, width:100, height:25} } type="primary" htmlType="submit">
                + Add Item
             </Button>
 
-            <Button type="default" onClick={handlResetBtn}>
+            <Button style={{ marginRight:5, width:100 ,height:25} } type="default" onClick={handlResetBtn}>
                Reset
             </Button>
 

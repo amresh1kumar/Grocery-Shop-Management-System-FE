@@ -1,120 +1,15 @@
-// import React from "react";
-// import { Form, Input, Button, Select, Table } from "antd";
-// import "./BillingPage.css";
-// import '..//../Components/Common.css'
-// import { FiRefreshCcw } from "react-icons/fi";
-
-
-// const { Option } = Select;
-
-// const BillingPage = () => {
-//   const [form] = Form.useForm();
-
-//   const clientColumns = [
-//     { title: "ClientName", dataIndex: "name", key: "name" },
-//     { title: "MobileNo", dataIndex: "mobile", key: "mobile" },
-//   ];
-
-//   const clients = [
-//     { key: 1, name: "Aman Kumar", mobile: "1111" },
-//     { key: 2, name: "Amresh", mobile: "12" },
-//     { key: 3, name: "Vikash", mobile: "12345" },
-//     { key: 4, name: "Unknown", mobile: "12345" },
-//     { key: 2, name: "Amresh", mobile: "12" },
-//     { key: 3, name: "Vikash", mobile: "12345" },
-//     { key: 4, name: "Unknown", mobile: "12345" },
-//     { key: 2, name: "Amresh", mobile: "12" },
-//     { key: 3, name: "Vikash", mobile: "12345" },
-//     { key: 4, name: "Unknown", mobile: "12345" },
-//     { key: 2, name: "Amresh", mobile: "12" },
-//     { key: 3, name: "Vikash", mobile: "12345" },
-//     { key: 4, name: "Unknown", mobile: "12345" },
-//   ];
-
-//   return (
-//     <div className="billing-container">
-//       <h2 className="header-title">
-//         Grocery Shop Billing Page
-//       </h2>
-//       <Form form={form} layout="inline" className="billing-form">
-//         <Form.Item name="itemName">
-//           <Input placeholder="Items Name" />
-//         </Form.Item>
-//         <Form.Item name="quantity">
-//           <Input placeholder="Quantity" />
-//         </Form.Item>
-//         <Form.Item name="mobile">
-//           <Input placeholder="Mobile Number" />
-//         </Form.Item>
-//         <Form.Item name="clientName">
-//           <Input placeholder="Client Name" />
-//         </Form.Item>
-//         <Form.Item name="price">
-//           <Input placeholder="Price" />
-//         </Form.Item>
-//         <Form.Item>
-//           <Button type="primary">Add To Bill</Button>
-//         </Form.Item>
-//         <Form.Item>
-//           <Button danger>Reset</Button>
-//         </Form.Item>
-//         <Form.Item>
-//           <Button>Add MobileNo + ClientName</Button>
-//         </Form.Item>
-//         <Form.Item name="mobileSearch">
-//           <Input placeholder="Mobile Number Search" />
-//         </Form.Item>
-//         <Form.Item>
-//           <Button>Search</Button>
-//         </Form.Item>
-//       </Form>
-
-//       <div className="filter-section">
-//         <span>Product Filter By Category</span>
-//         <Select style={{ width: 200, marginLeft: 10 }} placeholder='Select'>
-//           <Option value="Colgate">Colgate</Option>
-//           <Option value="Shampoo">Shampoo</Option>
-//         </Select>
-//         <Button className="refresh-btn">
-
-//           <FiRefreshCcw />
-//         </Button>
-//         <Button type="primary" className="report-btn">Report</Button>
-//       </div>
-
-//       <div className="data-table-section">
-//         <div className="billing-items-header">
-//           <span>Items</span>
-//           <span>ID</span>
-//           <span>Quantity</span>
-//           <span>Price</span>
-//           <span>Total</span>
-//         </div>
-//         <div className="client-list">
-//           <Table
-//             dataSource={clients}
-//             columns={clientColumns}
-//             pagination={false}
-//             size="small"
-//             scroll={{ y: 350 }}
-//           />
-//         </div>
-//       </div>
-//       <div className="bottom-actions">
-//         <Button className="dashboard-btn">Dashboard</Button>
-//         <span className="total-display">Total: ₹0.00</span>
-//         <Button type="primary" danger className="logout-btn">Logout</Button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BillingPage;
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Link } from "react-router-dom";
-import { Form, Input, Button, Table, Select } from "antd";
+import { Form, Input, Button, Table, Select, message } from "antd";
 import { FiRefreshCcw } from "react-icons/fi";
+import { ProductsList } from "../../api/productService";
 import "./BillingPage.css";
+import PrintBill from "./PrintBill";
+
+
+
+
 
 const { Option } = Select;
 
@@ -127,23 +22,139 @@ const clients = [
   { key: 1, name: "Aman Kumar", mobile: "1111" },
   { key: 2, name: "Amresh", mobile: "12" },
   { key: 3, name: "Vikash", mobile: "12345" },
-  { key: 4, name: "Unknown", mobile: "12345" },
-  { key: 5, name: "Ravi", mobile: "88888" },
-  { key: 6, name: "Priya", mobile: "99999" },
-  { key: 7, name: "Ankit", mobile: "77777" },
-  { key: 8, name: "Sneha", mobile: "66666" },
-  { key: 9, name: "Rohit", mobile: "55555" },
-  { key: 10, name: "Pooja", mobile: "44444" },
-  { key: 11, name: "Manish", mobile: "33333" },
-  { key: 12, name: "Neha", mobile: "22222" },
-  { key: 13, name: "Karan", mobile: "10101" },
-  { key: 14, name: "Simran", mobile: "12121" },
-  { key: 15, name: "Deepak", mobile: "13131" },
+
 ];
+
+
+const productsColumns = [
+  {
+    title: 'S.No',
+    key: "sno",
+    render: (text, record, index) => index + 1,
+    width: 80,
+    align: "center"
+  },
+  { title: "Item Name", dataIndex: "item_name", key: "item_name", align: "center" },
+  { title: "Quantity", dataIndex: "item_qty", key: "item_qty", align: "center" },
+  { title: "Price", dataIndex: "item_price", key: "item_price", align: "center" },
+  {
+    title: "Category",
+    dataIndex: "item_category",
+    key: "item_category",
+  },
+];
+
+
+const billColumns = [
+  { title: "Item", dataIndex: "itemName", key: "itemName" },
+  { title: "Qty", dataIndex: "quantity", key: "quantity" },
+  { title: "Price", dataIndex: "price", key: "price" },
+  { title: "Total", dataIndex: "total", key: "total" },
+];
+
 
 const BillingPage = () => {
   const [form] = Form.useForm();
   const [searchMobile, setSearchMobile] = useState("");
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([]);
+  const [billItems, setBillItems] = useState([]);
+  const [grandTotal, setGrandTotal] = useState(0);
+
+
+
+  const [filters, setFilters] = useState({
+    item_category: "",
+    item_name: "",
+  });
+
+  const billRef = useRef();
+
+  const generateBill = useReactToPrint({
+    contentRef: billRef,   // 👈 new required prop
+    documentTitle: "Grocery Bill",
+  });
+
+  // const handleAddToBill = () => {
+  //   const values = form.getFieldsValue();
+
+  //   if (!values.itemName || !values.quantity || !values.price) {
+  //     alert("Please fill item name, quantity and price!");
+  //     return;
+  //   }
+
+  //   const newItem = {
+  //     key: Date.now(),
+  //     itemName: values.itemName,
+  //     quantity: values.quantity,
+  //     price: values.price,
+  //     total: Number(values.quantity) * Number(values.price),
+  //   };
+
+  //   setBillItems((prev) => [...prev, newItem]);
+
+  //   form.resetFields(["itemName", "quantity", "price"]);
+  // };
+
+  const handleAddToBill = () => {
+    const values = form.getFieldsValue();
+
+    if (!values.itemName || !values.quantity || !values.price) {
+      alert("Please fill item name, quantity and price!");
+      return;
+    }
+
+    const newItem = {
+      key: Date.now(),
+      itemName: values.itemName,
+      quantity: Number(values.quantity),
+      price: Number(values.price),
+      total: Number(values.quantity) * Number(values.price),
+    };
+
+    setBillItems((prev) => {
+      const updated = [...prev, newItem];
+
+      //Calculate new grand total
+      const sum = updated.reduce((acc, item) => acc + item.total, 0);
+      setGrandTotal(sum);
+      message.success("Product added successfully");
+      return updated;
+      
+    });
+
+    form.resetFields(["itemName", "quantity", "price"]);
+  };
+
+
+  const handleReset = () => {
+    form.resetFields();
+  }
+
+  const loadCategories = async () => {
+    try {
+      const res = await ProductsList();
+      const unique = [...new Set(res.map((p) => p.item_category))];
+      setCategories(unique);
+    } catch (err) {
+      console.log("Category load error:", err);
+    }
+  };
+  const fetchProducts = async () => {
+    try {
+      const res = await ProductsList(filters);
+      setProducts(res)
+    } catch (err) {
+      throw err;
+    }
+  }
+  useEffect(() => {
+    fetchProducts();
+  }, [filters]);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   const handleMobileSearchChange = (e) => {
     setSearchMobile(e.target.value);
@@ -174,10 +185,16 @@ const BillingPage = () => {
           <Input placeholder="Price" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary">Add To Bill</Button>
+          <Button type="primary" onClick={handleAddToBill}>Add To Bill</Button>
         </Form.Item>
         <Form.Item>
-          <Button danger>Reset</Button>
+          <Button danger onClick={handleReset}>Reset</Button>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" onClick={generateBill}>
+            Print Bill
+          </Button>
+
         </Form.Item>
         <Form.Item>
           <Button>Save Mobile No + Client Name</Button>
@@ -190,35 +207,86 @@ const BillingPage = () => {
           />
         </Form.Item>
       </Form>
+      <div style={{ visibility: "hidden", position: "absolute" }}>
+        <PrintBill
+          ref={billRef}
+          client={{
+            name: form.getFieldValue("clientName"),
+            mobile: form.getFieldValue("mobile")
+          }}
+          items={billItems}
+          total={grandTotal}
+        />
+      </div>
+
+
 
       <div className="filter-section">
-        <span>Product Filter By Category</span>
-        <Select style={{ width: 200 }} placeholder="Select">
+        {/* <span>Product Filter By Category</span> */}
+        {/* <Select style={{ width: 200 }} placeholder="Select">
           <Option value="Colgate">Colgate</Option>
           <Option value="Shampoo">Shampoo</Option>
         </Select>
         <Button className="refresh-btn">
           <FiRefreshCcw />
-        </Button>
-        <Link to="/billingReport">
+        </Button> */}
+        {/* <Link to="/billingReport">
           <Button type="primary" className="report-btn">
             Report
           </Button>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="data-table-section">
-        {/* ✅ Left: Item Info (dummy placeholder layout) */}
         <div className="billing-items-left">
-          <div className="billing-items-header">
-            <div className="billing-col item-id">Item ID</div>
-            <div className="billing-col quantity">Quantity</div>
-            <div className="billing-col price">Price</div>
-            <div className="billing-col total">Total</div>
-          </div>
+          <Select
+            showSearch
+            allowClear
+            style={{ width: 220 }}
+            placeholder="Select Category"
+            onChange={(value) => setFilters((prev) => ({
+              item_category: value || "",
+            }))
+            }
+          >
+            {categories.map((cat, index) => (
+              <Option key={index} value={cat}>
+                {cat}
+              </Option>
+            ))}
+          </Select>
+          <Table
+            dataSource={products}
+            columns={productsColumns}
+            pagination={false}
+            size="small"
+            scroll={{ y: "45vh" }}
+            rowKey="id"
+            onRow={(record) => {
+              return {
+                onDoubleClick: () => {
+                  form.setFieldsValue({
+                    itemName: record.item_name,
+                    quantity: 1,
+                    price: record.item_price,
+                  });
+                },
+              };
+            }}
+          />
+
         </div>
 
-        {/* ✅ Right: Client Info Table */}
+        <div className="bill-list">
+          <Table
+            dataSource={billItems}
+            columns={billColumns}
+            pagination={false}
+            size="small"
+            scroll={{ y: 350 }}
+          />
+        </div>
+
         <div className="client-list">
           <Table
             dataSource={filteredClients}
@@ -226,6 +294,16 @@ const BillingPage = () => {
             pagination={false}
             size="small"
             scroll={{ y: 350 }}
+            onRow={(record) => {
+              return {
+                onDoubleClick: () => {
+                  form.setFieldsValue({
+                    clientName: record.name,
+                    mobile: record.mobile,
+                  });
+                },
+              };
+            }}
           />
         </div>
       </div>
@@ -234,7 +312,10 @@ const BillingPage = () => {
         <Link to="/billingDashboard">
           <Button className="dashboard-btn">Dashboard</Button>
         </Link>
-        <span className="total-display">Total: ₹0.00</span>
+        {/* <span className="total-display">Total: ₹0.00</span> */}
+
+        <span className="total-display">Total: ₹{grandTotal.toFixed(2)}</span>
+
         <Link to="/">
           <Button type="primary" danger className="logout-btn">
             Logout

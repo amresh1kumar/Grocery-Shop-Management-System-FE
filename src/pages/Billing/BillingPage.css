@@ -41,7 +41,6 @@
 
 .data-table-section {
    display: flex;
-   justify-content: space-between;
    gap: 20px;
    margin-top: 20px;
    flex-wrap: wrap;
@@ -49,7 +48,7 @@
 
 /* ✅ Left Column: 50% */
 .billing-items-left {
-   width: 48%;
+   width: 40%;
    border: 1px solid #ddd;
    border-radius: 5px;
    padding: 10px;
@@ -60,7 +59,16 @@
 
 /* ✅ Right Column: 50% */
 .client-list {
-   width: 48%;
+   width: 20%;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   min-height: 400px;
+   max-height: 400px;
+   overflow-y: auto;
+}
+
+.bill-list {
+   width: 35%;
    border: 1px solid #ddd;
    border-radius: 5px;
    min-height: 400px;
