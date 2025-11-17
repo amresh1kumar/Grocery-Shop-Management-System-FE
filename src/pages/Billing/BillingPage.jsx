@@ -3,28 +3,16 @@ import { useReactToPrint } from "react-to-print";
 import { Link } from "react-router-dom";
 import { Form, Input, Button, Table, Select, message } from "antd";
 import { FiRefreshCcw } from "react-icons/fi";
-import { ProductsList } from "../../api/productService";
+import { ProductsList, UpdateProduct, customerInfoList } from "../../api/productService";
 import "./BillingPage.css";
 import PrintBill from "./PrintBill";
-
-
-
-
 
 const { Option } = Select;
 
 const clientColumns = [
-  { title: "Client Name", dataIndex: "name", key: "name" },
-  { title: "Mobile No", dataIndex: "mobile", key: "mobile" },
+  { title: "Client Name", dataIndex: "customer_name", key: "name" },
+  { title: "Mobile No", dataIndex: "customer_contact_no", key: "ontact_no" },
 ];
-
-const clients = [
-  { key: 1, name: "Aman Kumar", mobile: "1111" },
-  { key: 2, name: "Amresh", mobile: "12" },
-  { key: 3, name: "Vikash", mobile: "12345" },
-
-];
-
 
 const productsColumns = [
   {
@@ -44,7 +32,6 @@ const productsColumns = [
   },
 ];
 
-
 const billColumns = [
   { title: "Item", dataIndex: "itemName", key: "itemName" },
   { title: "Qty", dataIndex: "quantity", key: "quantity" },
@@ -60,9 +47,7 @@ const BillingPage = () => {
   const [categories, setCategories] = useState([]);
   const [billItems, setBillItems] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
-
-
-
+  const [customerInfo, setCustomerInfo] = useState([]);
   const [filters, setFilters] = useState({
     item_category: "",
     item_name: "",
@@ -86,17 +71,61 @@ const BillingPage = () => {
   //   const newItem = {
   //     key: Date.now(),
   //     itemName: values.itemName,
-  //     quantity: values.quantity,
-  //     price: values.price,
+  //     quantity: Number(values.quantity),
+  //     price: Number(values.price),
   //     total: Number(values.quantity) * Number(values.price),
   //   };
 
-  //   setBillItems((prev) => [...prev, newItem]);
+  //   setBillItems((prev) => {
+  //     const updated = [...prev, newItem];
+
+  //     //Calculate new grand total
+  //     const sum = updated.reduce((acc, item) => acc + item.total, 0);
+  //     setGrandTotal(sum);
+  //     message.success("Product added successfully");
+  //     return updated;
+
+  //   });
 
   //   form.resetFields(["itemName", "quantity", "price"]);
   // };
 
-  const handleAddToBill = () => {
+
+  // const handleAddToBill = () => {
+  //   const values = form.getFieldsValue();
+
+  //   if (!values.itemName || !values.quantity || !values.price) {
+  //     alert("Please fill item name, quantity and price!");
+  //     return;
+  //   }
+
+  //   // STOCK VALIDATION
+  //   if (Number(values.quantity) > Number(values.stock)) {
+  //     message.error("Not enough stock available!");
+  //     return;
+  //   }
+
+  //   const newItem = {
+  //     key: Date.now(),
+  //     itemName: values.itemName,
+  //     quantity: Number(values.quantity),
+  //     price: Number(values.price),
+  //     total: Number(values.quantity) * Number(values.price),
+  //   };
+
+  //   setBillItems((prev) => {
+  //     const updated = [...prev, newItem];
+  //     const sum = updated.reduce((acc, item) => acc + item.total, 0);
+  //     setGrandTotal(sum);
+  //     message.success("Product added successfully");
+  //     return updated;
+  //   });
+
+  //   form.resetFields(["itemName", "quantity", "price", "stock"]);
+  // };
+
+
+  const handleAddToBill = async () => {
     const values = form.getFieldsValue();
 
     if (!values.itemName || !values.quantity || !values.price) {
@@ -104,6 +133,35 @@ const BillingPage = () => {
       return;
     }
 
+    // STOCK VALIDATION
+    if (Number(values.quantity) > Number(values.stock)) {
+      message.error("Not enough stock available!");
+      return;
+    }
+
+    // 🔥 PRODUCT ID nikalo selected item ka
+    const selectedProduct = products.find(
+      (p) => p.item_name === values.itemName
+    );
+
+    if (!selectedProduct) {
+      message.error("Product not found!");
+      return;
+    }
+
+    // 🔥 BACKEND STOCK REDUCE CALL
+    try {
+      await UpdateProduct(selectedProduct.id, {
+        reduce_qty: values.quantity, // backend me jayega
+      });
+
+      message.success("Stock reduced successfully!");
+    } catch (err) {
+      message.error("Stock update failed!");
+      return;
+    }
+
+    // 🔥 BILL ME ADD KARO
     const newItem = {
       key: Date.now(),
       itemName: values.itemName,
@@ -114,16 +172,16 @@ const BillingPage = () => {
 
     setBillItems((prev) => {
       const updated = [...prev, newItem];
-
-      //Calculate new grand total
       const sum = updated.reduce((acc, item) => acc + item.total, 0);
       setGrandTotal(sum);
-      message.success("Product added successfully");
       return updated;
-      
     });
 
-    form.resetFields(["itemName", "quantity", "price"]);
+    // 🔥 LOCAL STOCK UI update karne ke liye products reload kar lo
+    fetchProducts();
+
+    // RESET FIELDS
+    form.resetFields(["itemName", "quantity", "price", "stock"]);
   };
 
 
@@ -148,12 +206,25 @@ const BillingPage = () => {
       throw err;
     }
   }
+
+  const fetchCustomerInfo = async () => {
+    try {
+      const res = await customerInfoList()
+      setCustomerInfo(res)
+
+    } catch (error) {
+      message.error('problem in fetching customer informations')
+
+    }
+
+  }
   useEffect(() => {
     fetchProducts();
   }, [filters]);
 
   useEffect(() => {
     loadCategories();
+    fetchCustomerInfo();
   }, []);
 
   const handleMobileSearchChange = (e) => {
@@ -161,8 +232,8 @@ const BillingPage = () => {
   };
 
   const filteredClients = searchMobile
-    ? clients.filter((client) => client.mobile.includes(searchMobile))
-    : clients;
+    ? customerInfo.filter((client) => client.mobile.includes(searchMobile))
+    : customerInfo;
 
   return (
     <div className="billing-container">
@@ -184,6 +255,10 @@ const BillingPage = () => {
         <Form.Item name="price">
           <Input placeholder="Price" />
         </Form.Item>
+        <Form.Item name="stock" hidden>
+          <Input type="hidden" />
+        </Form.Item>
+
         <Form.Item>
           <Button type="primary" onClick={handleAddToBill}>Add To Bill</Button>
         </Form.Item>
@@ -269,6 +344,7 @@ const BillingPage = () => {
                     itemName: record.item_name,
                     quantity: 1,
                     price: record.item_price,
+                    stock: record.item_qty
                   });
                 },
               };
@@ -289,7 +365,7 @@ const BillingPage = () => {
 
         <div className="client-list">
           <Table
-            dataSource={filteredClients}
+            dataSource={customerInfo}
             columns={clientColumns}
             pagination={false}
             size="small"
@@ -298,8 +374,8 @@ const BillingPage = () => {
               return {
                 onDoubleClick: () => {
                   form.setFieldsValue({
-                    clientName: record.name,
-                    mobile: record.mobile,
+                    clientName: record.customer_name,
+                    mobile: record.customer_contact_no,
                   });
                 },
               };

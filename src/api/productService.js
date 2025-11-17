@@ -55,5 +55,14 @@ export const DeleteProduct = async (id) => {
    } catch (err) {
       throw err;
    }
+}
 
+
+export const customerInfoList = async () => {
+   try {
+      const res = await api.get("customers/")
+      return res.data;
+   } catch (err) {
+      throw err
+   }
 }

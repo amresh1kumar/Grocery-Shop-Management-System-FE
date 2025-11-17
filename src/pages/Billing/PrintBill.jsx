@@ -1,30 +1,3 @@
-// import React, { forwardRef } from "react";
-
-// const PrintBill = forwardRef(({ client, items, total }, ref) => {
-//    return (
-//       <div ref={ref} style={{ padding: "20px" }}>
-
-//          <h2 style={{ textAlign: "center" }}>Grocery Shop</h2>
-
-//          <p>Client Name: {client?.name}</p>
-//          <p>Mobile: {client?.mobile}</p>
-
-//          <hr />
-
-//          {items.map((item, i) => (
-//             <p key={i}>
-//                {i + 1}. {item.itemName} — {item.quantity} × {item.price} = {item.total}
-//             </p>
-//          ))}
-
-//          <hr />
-//          <h3>Total: ₹{total}</h3>
-//       </div>
-//    );
-// });
-
-// export default PrintBill;
-
 import React, { forwardRef } from "react";
 import "./PrintBill.css";
 import Image from "../../assets/images/logo.png"
@@ -38,7 +11,6 @@ const PrintBill = forwardRef(({ client, items, total }, ref) => {
       <div ref={ref} className="print-wrapper">
          <div className="bill-container">
 
-            {/* Header */}
             <h1 className="shop-title">Grocery Shop</h1>
             <p className="shop-address">Raipur, Chhattisgarh, India</p>
             <p className="shop-phone">Tel +917856324856</p>
