@@ -57,6 +57,14 @@ export const DeleteProduct = async (id) => {
    }
 }
 
+export const DashboardSummary = async () => {
+   try {
+      const res = await api.get("productList/summary/");
+      return res;
+   } catch (err) {
+      throw err;
+   }
+};
 
 export const customerInfoList = async () => {
    try {
