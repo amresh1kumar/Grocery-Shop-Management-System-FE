@@ -74,3 +74,8 @@ export const customerInfoList = async () => {
       throw err
    }
 }
+
+export const addCustomerInfo = async (data) => {
+   const res = await api.post("customers/", data);
+   return res.data;
+};

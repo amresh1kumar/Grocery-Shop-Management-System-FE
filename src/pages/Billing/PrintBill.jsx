@@ -13,7 +13,7 @@ const PrintBill = forwardRef(({ client, items, total }, ref) => {
 
             <h1 className="shop-title">Grocery Shop</h1>
             <p className="shop-address">Raipur, Chhattisgarh, India</p>
-            <p className="shop-phone">Tel +917856324856</p>
+            <p className="shop-phone">Tel +{client?.mobile|| "N/A"}</p>
 
             {/* Right-side Image */}
             <img
