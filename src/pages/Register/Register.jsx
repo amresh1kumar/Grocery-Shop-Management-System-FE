@@ -36,7 +36,6 @@ function Register() {
       } catch (err) {
          console.error("Register error:", err.response?.data);
 
-         // 👇 yaha check kar specific email error
          if (err.response?.data?.error?.email) {
             message.error("Email already registered!");
          } else {
@@ -57,7 +56,6 @@ function Register() {
          <div className="all-items">
             <img src={Image} alt="logo" className="logo" />
 
-            {/* Email */}
             <Form.Item
                name="email"
                rules={[
@@ -73,7 +71,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Optional Username */}
             <Form.Item name="username">
                <Input
                   placeholder="Username (optional)"
@@ -82,7 +79,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* First Name */}
             <Form.Item name="first_name">
                <Input
                   placeholder="First Name"
@@ -91,7 +87,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Last Name */}
             <Form.Item name="last_name">
                <Input
                   placeholder="Last Name"
@@ -100,7 +95,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Address */}
             <Form.Item name="address">
                <Input
                   placeholder="Address"
@@ -109,7 +103,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Contact Number */}
             <Form.Item name="contact_number">
                <Input
                   placeholder="Contact Number"
@@ -119,7 +112,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Password */}
             <Form.Item
                name="password"
                rules={[{ required: true, message: "Please input your password!" }]}
@@ -132,7 +124,6 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Confirm Password */}
             <Form.Item
                name="confirm_password"
                rules={[{ required: true, message: "Please confirm your password!" }]}
@@ -145,22 +136,14 @@ function Register() {
                />
             </Form.Item>
 
-            {/* Remember Me + Forgot */}
-            <Form.Item className="rem-forgot">
-               <div className="rem-forgot-inner">
-                  <Checkbox>Remember me</Checkbox>
-                  <Link to="/forgot-password" style={{ float: "right" }}>Forgot Password?</Link>
-               </div>
-            </Form.Item>
 
-            {/* Submit Button (Full width) */}
+
             <Form.Item className="login-btn">
                <Button type="primary" htmlType="submit" className="login-btn-full">
                   Register
                </Button>
             </Form.Item>
 
-            {/* Already Login (centered) */}
             <Form.Item className="signup-link" style={{ textAlign: "center" }}>
                <p>Already Login? <Link to="/">Sign In</Link></p>
             </Form.Item>

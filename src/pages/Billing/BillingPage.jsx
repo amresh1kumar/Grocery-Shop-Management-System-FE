@@ -3,44 +3,40 @@ import { useReactToPrint } from "react-to-print";
 import { Link } from "react-router-dom";
 import { Form, Input, Button, Table, Select, message } from "antd";
 import { FiRefreshCcw } from "react-icons/fi";
-import { ProductsList, UpdateProduct, customerInfoList } from "../../api/productService";
+import { ProductsList, UpdateProduct, customerInfoList, addCustomerInfo } from "../../api/productService";
 import "./BillingPage.css";
 import PrintBill from "./PrintBill";
-
-const { Option } = Select;
-
-const clientColumns = [
-  { title: "Client Name", dataIndex: "customer_name", key: "name" },
-  { title: "Mobile No", dataIndex: "customer_contact_no", key: "ontact_no" },
-];
-
-const productsColumns = [
-  {
-    title: 'S.No',
-    key: "sno",
-    render: (text, record, index) => index + 1,
-    width: 80,
-    align: "center"
-  },
-  { title: "Item Name", dataIndex: "item_name", key: "item_name", align: "center" },
-  { title: "Quantity", dataIndex: "item_qty", key: "item_qty", align: "center" },
-  { title: "Price", dataIndex: "item_price", key: "item_price", align: "center" },
-  {
-    title: "Category",
-    dataIndex: "item_category",
-    key: "item_category",
-  },
-];
-
-const billColumns = [
-  { title: "Item", dataIndex: "itemName", key: "itemName" },
-  { title: "Qty", dataIndex: "quantity", key: "quantity" },
-  { title: "Price", dataIndex: "price", key: "price" },
-  { title: "Total", dataIndex: "total", key: "total" },
-];
-
+import { Popconfirm } from "antd";
 
 const BillingPage = () => {
+
+
+  const { Option } = Select;
+
+  const clientColumns = [
+    { title: "Client Name", dataIndex: "customer_name", key: "name" },
+    { title: "Mobile No", dataIndex: "customer_contact_no", key: "ontact_no" },
+  ];
+
+  const productsColumns = [
+    {
+      title: 'S.No',
+      key: "sno",
+      render: (text, record, index) => index + 1,
+      width: 80,
+      align: "center"
+    },
+    { title: "Item Name", dataIndex: "item_name", key: "item_name", align: "center" },
+    { title: "Quantity", dataIndex: "item_qty", key: "item_qty", align: "center" },
+    { title: "Price", dataIndex: "item_price", key: "item_price", align: "center" },
+    {
+      title: "Category",
+      dataIndex: "item_category",
+      key: "item_category",
+    },
+  ];
+
+
   const [form] = Form.useForm();
   const [searchMobile, setSearchMobile] = useState("");
   const [products, setProducts] = useState([])
@@ -59,6 +55,85 @@ const BillingPage = () => {
     contentRef: billRef,   // 👈 new required prop
     documentTitle: "Grocery Bill",
   });
+
+
+
+  // const handleRemoveBillItem = async (record) => {
+  //   // 🔁 OPTIONAL: stock wapas add karna ho to
+  //   const product = products.find(p => p.item_name === record.itemName);
+
+  //   if (product) {
+  //     try {
+  //       await UpdateProduct(product.id, {
+  //         increase_qty: record.quantity, // backend me stock wapas
+  //       });
+  //     } catch (err) {
+  //       message.error("Stock rollback failed");
+  //     }
+  //   }
+
+  //   // ❌ bill item remove
+  //   const updated = billItems.filter(item => item.key !== record.key);
+
+  //   setBillItems(updated);
+
+  //   // 🔢 grand total recalc
+  //   const sum = updated.reduce((acc, item) => acc + item.total, 0);
+  //   setGrandTotal(sum);
+
+  //   message.success("Item removed from bill");
+
+  //   // 🔄 product list refresh
+  //   fetchProducts();
+  // };
+
+  const handleRemoveBillItem = async (record) => {
+    try {
+      // 🔺 STOCK ROLLBACK
+      await UpdateProduct(record.productId, {
+        increase_qty: record.quantity,
+      });
+
+      message.success("Stock restored successfully");
+    } catch (err) {
+      message.error("Stock rollback failed");
+      return;
+    }
+
+    // ❌ Remove item from bill
+    const updated = billItems.filter(item => item.key !== record.key);
+    setBillItems(updated);
+
+    // 🔢 Recalculate grand total
+    const sum = updated.reduce((acc, item) => acc + item.total, 0);
+    setGrandTotal(sum);
+
+    // 🔄 Refresh products list
+    fetchProducts();
+  };
+
+
+  const billColumns = [
+    { title: "Item", dataIndex: "itemName", key: "itemName" },
+    { title: "Qty", dataIndex: "quantity", key: "quantity" },
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Total", dataIndex: "total", key: "total" },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <Popconfirm
+          title="Remove this item?"
+          onConfirm={() => handleRemoveBillItem(record)}
+        >
+          <Button danger size="small">❌</Button>
+        </Popconfirm>
+      )
+
+    },
+  ];
+
 
   // const handleAddToBill = () => {
   //   const values = form.getFieldsValue();
@@ -164,6 +239,7 @@ const BillingPage = () => {
     // 🔥 BILL ME ADD KARO
     const newItem = {
       key: Date.now(),
+      productId: selectedProduct.id,   // ✅ VERY IMPORTANT
       itemName: values.itemName,
       quantity: Number(values.quantity),
       price: Number(values.price),
@@ -218,6 +294,33 @@ const BillingPage = () => {
     }
 
   }
+
+
+  const handleSaveCustomer = async () => {
+    const values = form.getFieldsValue();
+
+    if (!values.clientName || !values.mobile) {
+      message.warning("Please enter client name and mobile number");
+      return;
+    }
+
+    try {
+      await addCustomerInfo({
+        customer_name: values.clientName,
+        customer_contact_no: values.mobile,
+      });
+
+      message.success("Customer saved successfully");
+      fetchCustomerInfo(); // 🔄 table refresh
+    } catch (error) {
+      if (error.response?.status === 400) {
+        message.error("Mobile number already exists");
+      } else {
+        message.error("Failed to save customer");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
   }, [filters]);
@@ -227,18 +330,23 @@ const BillingPage = () => {
     fetchCustomerInfo();
   }, []);
 
+  const filteredCustomerInfo = customerInfo.filter((customer) =>
+    customer.customer_contact_no
+      ?.toLowerCase()
+      .includes(searchMobile.toLowerCase())
+  );
+
+
   const handleMobileSearchChange = (e) => {
     setSearchMobile(e.target.value);
   };
 
-  const filteredClients = searchMobile
-    ? customerInfo.filter((client) => client.mobile.includes(searchMobile))
-    : customerInfo;
+
+
 
   return (
     <div className="billing-container">
       <h2 className="header-title">Grocery Shop Billing Page</h2>
-
       <Form form={form} layout="inline" className="billing-form">
         <Form.Item name="itemName">
           <Input placeholder="Items Name" />
@@ -272,7 +380,10 @@ const BillingPage = () => {
 
         </Form.Item>
         <Form.Item>
-          <Button>Save Mobile No + Client Name</Button>
+          <Button type="primary" onClick={handleSaveCustomer}>
+            Save Mobile No + Client Name
+          </Button>
+
         </Form.Item>
         <Form.Item name="mobileSearch">
           <Input
@@ -294,30 +405,13 @@ const BillingPage = () => {
         />
       </div>
 
-
-
-      <div className="filter-section">
-        {/* <span>Product Filter By Category</span> */}
-        {/* <Select style={{ width: 200 }} placeholder="Select">
-          <Option value="Colgate">Colgate</Option>
-          <Option value="Shampoo">Shampoo</Option>
-        </Select>
-        <Button className="refresh-btn">
-          <FiRefreshCcw />
-        </Button> */}
-        {/* <Link to="/billingReport">
-          <Button type="primary" className="report-btn">
-            Report
-          </Button>
-        </Link> */}
-      </div>
-
       <div className="data-table-section">
         <div className="billing-items-left">
           <Select
             showSearch
             allowClear
-            style={{ width: 220 }}
+            listHeight={200}
+            style={{ width: 200, height: 35, marginBottom: 5 }}
             placeholder="Select Category"
             onChange={(value) => setFilters((prev) => ({
               item_category: value || "",
@@ -336,6 +430,7 @@ const BillingPage = () => {
             pagination={false}
             size="small"
             scroll={{ y: "45vh" }}
+            // style={{maxHeight:400}}
             rowKey="id"
             onRow={(record) => {
               return {
@@ -359,15 +454,37 @@ const BillingPage = () => {
             columns={billColumns}
             pagination={false}
             size="small"
-            scroll={{ y: 350 }}
+            rowKey="id"
+            scroll={{ y: "45vh" }}
+
           />
         </div>
 
         <div className="client-list">
-          <Table
+          {/* <Table
             dataSource={customerInfo}
             columns={clientColumns}
             pagination={false}
+            rowKey="id"
+
+            size="small"
+            scroll={{ y: 350 }}
+            onRow={(record) => {
+              return {
+                onDoubleClick: () => {
+                  form.setFieldsValue({
+                    clientName: record.customer_name,
+                    mobile: record.customer_contact_no,
+                  });
+                },
+              };
+            }}
+          /> */}
+          <Table
+            dataSource={filteredCustomerInfo}
+            columns={clientColumns}
+            pagination={false}
+            rowKey="id"
             size="small"
             scroll={{ y: 350 }}
             onRow={(record) => {
@@ -381,19 +498,20 @@ const BillingPage = () => {
               };
             }}
           />
+
         </div>
       </div>
 
       <div className="bottom-actions">
-        <Link to="/billingDashboard">
+        {/* <Link to="/billingDashboard">
           <Button className="dashboard-btn">Dashboard</Button>
-        </Link>
+        </Link> */}
         {/* <span className="total-display">Total: ₹0.00</span> */}
 
         <span className="total-display">Total: ₹{grandTotal.toFixed(2)}</span>
 
         <Link to="/">
-          <Button type="primary" danger className="logout-btn">
+          <Button className="logout-btn">
             Logout
           </Button>
         </Link>

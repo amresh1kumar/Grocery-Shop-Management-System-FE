@@ -1,127 +1,207 @@
-.billing-container {
-   padding: 20px;
-   background: #fff;
-   color: #333;
+* {
+   box-sizing: border-box;
+}
+
+body {
+   margin: 0;
+   overflow-x: hidden;
    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+   background: #f5f7fa;
+}
+
+.billing-container {
+   padding: 0px 16px 0px 16px;
+   background: #fff;
+   /* max-height: 70vh; */
+   overflow-x: hidden;
+   /* border: 1px solid red; */
 }
 
 .header-title {
    font-size: 1.8rem;
    text-align: center;
    color: #1890ff;
-   font-weight: bold;
-   margin-bottom: 20px;
+   font-weight: 700;
+   margin-bottom: 10px;
 }
 
 .billing-form {
    display: flex;
    flex-wrap: wrap;
-   gap: 12px;
-   justify-content: center;
-   margin-bottom: 25px;
-}
-
-.filter-section {
-   display: flex;
-   align-items: center;
    gap: 10px;
    justify-content: center;
-   margin: 20px 0;
-}
+   margin-bottom: 12px;
 
-.refresh-btn {
-   font-size: 18px;
-}
-
-.report-btn {
-   border: none;
-   background-color: #52c41a;
-   color: white;
 }
 
 .data-table-section {
    display: flex;
-   gap: 20px;
-   margin-top: 20px;
-   flex-wrap: wrap;
+   gap: 10px;
+   width: 100%;
+   height: 420px;
+   overflow-x: hidden;
+
+   /* 🔑 critical */
 }
 
-/* ✅ Left Column: 50% */
+
 .billing-items-left {
-   width: 40%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   padding: 10px;
-   min-height: 400px;
-   max-height: 400px;
-   overflow-y: auto;
-}
+   flex: 0 0 40%;
 
-/* ✅ Right Column: 50% */
-.client-list {
-   width: 20%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   min-height: 400px;
-   max-height: 400px;
-   overflow-y: auto;
 }
 
 .bill-list {
-   width: 35%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   min-height: 400px;
-   max-height: 400px;
-   overflow-y: auto;
+   flex: 0 0 35%;
+
 }
 
-.billing-items-header {
+.client-list {
+   flex: 0 0 25%;
+
+}
+
+.billing-items-left,
+.bill-list,
+.client-list {
+   border: 1px solid #e0e0e0;
+   border-radius: 6px;
    display: flex;
-   justify-content: space-between;
-   font-weight: bold;
-   background-color: #f5f5f5;
-   border-bottom: 1px solid #ddd;
-   padding: 10px;
-   font-size: 16px;
-   color: #333;
-   /* text-transform: uppercase; */
+   flex-direction: column;
+   background: #fff;
+   overflow: hidden;
+
 }
 
-.billing-col {
+
+.ant-table-wrapper {
    flex: 1;
-   text-align: center;
 }
 
-.item-id {
-   flex: 2;
+.ant-table-body {
+   overflow-y: auto !important;
+
 }
 
-.client-list .ant-table-thead th {
-   font-weight: 700 !important;
-   font-size: 1rem;
-   background-color: #fafafa;
+
+.ant-table-thead th {
+   background: #f9f9f9 !important;
+   font-weight: 600 !important;
    text-align: center;
+
 }
 
 .bottom-actions {
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   width: 100%;
+   background: #fff;
+   border-top: 1px solid #ddd;
+   padding: 10px 16px;
    display: flex;
    justify-content: space-between;
-   margin-top: 30px;
    align-items: center;
-   width: 60%;
-   margin-left: auto;
-   margin-right: auto;
-}
+   z-index: 1000;
 
-.dashboard-btn,
-.logout-btn {
-   background-color: red;
-   color: white;
+
 }
 
 .total-display {
-   font-weight: bold;
+   font-weight: 700;
    font-size: 18px;
-   color: red;
+   color: #e53935;
+   /* border: 1px solid red; */
+}
+
+/* ===============================
+   📱 MOBILE VIEW (≤768px)
+   =============================== */
+@media (max-width: 768px) {
+
+   body {
+      overflow-x: hidden;
+   }
+
+   /* Main container */
+   .billing-container {
+      padding: 10px;
+      padding-bottom: 170px;
+      /* space for fixed bottom bar */
+      overflow-x: hidden;
+   }
+
+   /* Header */
+   .header-title {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+   }
+
+
+   .billing-form {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+   }
+
+   .billing-form .ant-form-item {
+      width: 100%;
+   }
+
+   .data-table-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      height: auto;
+   }
+
+   .billing-items-left,
+   .bill-list,
+   .client-list {
+      width: 100%;
+      flex: none;
+   }
+
+   /* Tables scroll internally */
+   .billing-items-left .ant-table-body,
+   .bill-list .ant-table-body,
+   .client-list .ant-table-body {
+      max-height: 260px;
+      overflow-y: auto;
+   }
+
+   /* Category select full width */
+   .billing-items-left .ant-select {
+      width: 100% !important;
+   }
+
+   /* ===============================
+     BOTTOM ACTIONS → FLEX COLUMN
+     =============================== */
+   .bottom-actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+      padding: 10px;
+
+      display: flex;
+      /* flex-direction: column; */
+      gap: 8px;
+
+      z-index: 1000;
+   }
+
+   .bottom-actions button {
+      width: 100%;
+      border: 1px solid red;
+   }
+
+   .total-display {
+      text-align: center;
+      font-size: 16px;
+   }
 }

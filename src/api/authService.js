@@ -11,7 +11,3 @@ export const login = async (credentials) => {
 };
 
 
-export const logout = () => {
-   localStorage.removeItem("token");
-};
-

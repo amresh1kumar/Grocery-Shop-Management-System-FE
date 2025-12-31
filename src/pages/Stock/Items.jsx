@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./Items.css";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -14,9 +14,11 @@ import {
 import { LogoutOutlined } from "@ant-design/icons";
 import { FiRefreshCcw } from "react-icons/fi";
 import "../../Components/Common.css";
-import { logout } from "../../api/authService";
 import { ProductsList, DeleteProduct, UpdateProduct } from "../../api/productService"
 import Items_add_form from "./Items_add_form";
+import { AuthContext } from "../../auth/AuthProvider";
+import { Popconfirm } from "antd";
+
 
 function Items() {
 
@@ -62,9 +64,24 @@ function Items() {
                >
                   Update
                </Button>
-               <Button style={{ padding: 0, width: 70 }} danger onClick={() => handleDelete(record.id)}>
+               {/* <Button style={{ padding: 0, width: 70 }} danger onClick={() => handleDelete(record.id)}>
                   Delete
-               </Button>
+               </Button> */}
+
+               <Popconfirm
+                  title="Are you sure?"
+                  description="This product will be permanently deleted."
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={() => handleDelete(record.id)}
+               >
+                  <Button
+                     style={{ padding: 0, width: 70 }}
+                     danger
+                  >
+                     Delete
+                  </Button>
+               </Popconfirm>
             </>
 
          ),
@@ -80,6 +97,7 @@ function Items() {
    })
    const [form] = Form.useForm()
    const navigate = useNavigate()
+   const { logout } = useContext(AuthContext);
 
 
    const loadCategories = async () => {
@@ -143,20 +161,22 @@ function Items() {
    useEffect(() => {
       fetchProducts();
    }, [filters]);
-   
+
    useEffect(() => {
       loadCategories();
    }, []);
 
-   const handleLogout = (() => {
+
+
+   const handleLogout = () => {
       logout();
-      navigate('/')
-   })
+      navigate("/", { replace: true });
+   };
 
    return (
       <div className="items-container">
          {/* Add Product Form */}
-         <Items_add_form onSuccess={fetchProducts} />
+         <Items_add_form categories={categories} onSuccess={() => { fetchProducts(); loadCategories(); }} />
 
          <Title level={3} className="section-title">Available Stocks</Title>
          <div className="filter-section">
@@ -164,6 +184,8 @@ function Items() {
             <Select
                showSearch
                allowClear
+               listHeight={200}
+
                style={{ width: 200 }}
                placeholder="Select Category"
                onChange={(value) =>
@@ -199,11 +221,11 @@ function Items() {
          </div>
 
          <div className="logout-section">
-            <Link to="/">
-               <Button onClick={handleLogout} type="primary" danger icon={<LogoutOutlined />}>
-                  Logout
-               </Button>
-            </Link>
+
+            <Button onClick={handleLogout} type="primary" danger icon={<LogoutOutlined />}>
+               Logout
+            </Button>
+
          </div>
 
          <Modal

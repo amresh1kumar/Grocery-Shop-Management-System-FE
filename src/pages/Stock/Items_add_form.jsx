@@ -1,52 +1,68 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
    Input,
    Form,
    Button,
    Select,
-   message
+   message,
+   Divider,
+   Space
 } from "antd";
 import { AddProduct } from '../../api/productService'
 
 const { Option } = Select;
 
-function Items_add_form({ onSuccess }) {
+function Items_add_form({ onSuccess, categories = [] }) {
 
    const [form] = Form.useForm();
+   const [newCategory, setNewCategory] = useState("");
+   const [categoryList, setCategoryList] = useState(categories);
+
+   useEffect(() => {
+      setCategoryList(categories);
+   }, [categories]);
+
 
    const handlResetBtn = () => {
       form.resetFields();
-   }
+      setNewCategory("");
+   };
+
+   const addNewCategory = () => {
+      if (!newCategory.trim()) {
+         message.warning("Please enter category name");
+         return;
+      }
+
+      if (categoryList.includes(newCategory)) {
+         message.info("Category already exists");
+         return;
+      }
+
+      setCategoryList(prev => [...prev, newCategory]);
+      form.setFieldsValue({ item_category: newCategory });
+      setNewCategory("");
+      message.success("Category added");
+   };
 
    const onFinish = async (values) => {
-      // console.log("🎯 Form submit!", values);  // ⬅️ Test log
-
       try {
-         const response = await AddProduct(values);
-         console.log("✅ Success:", response);
-
+         await AddProduct(values);
          message.success("Product added successfully!");
          form.resetFields();
 
-         if (onSuccess) {
-            onSuccess();
-         }
-
+         if (onSuccess) onSuccess();
       } catch (error) {
          message.error("Failed to add product!");
       }
-   }
-   const onFinishFailed = (errorInfo) => {
-      console.log("❌ Validation failed:", errorInfo);
-   }
+   };
 
    return (
       <Form
          form={form}
          onFinish={onFinish}
-         onFinishFailed={onFinishFailed}
-         className="form-section"
          layout="vertical"
+         className="form-section"
       >
          <Form.Item
             label="Item Name"
@@ -75,28 +91,60 @@ function Items_add_form({ onSuccess }) {
          <Form.Item
             label="Category"
             name="item_category"
-            rules={[{ required: true, message: 'Please select category!' }]}
+            rules={[{ required: true, message: "Please select or add category!" }]}
          >
-            <Input placeholder="Enter Item Category" />
+            <Select
+               showSearch
+               allowClear
+               listHeight={200}
+
+               placeholder="Select or add category"
+               popupRender={(menu) => (
+                  <>
+                     {menu}
+                     <Divider style={{ margin: "8px 0" }} />
+                     <Space style={{ padding: "0 8px 4px" }}>
+                        <Input
+                           placeholder="Add new category"
+                           value={newCategory}
+                           onChange={(e) => setNewCategory(e.target.value)}
+                        />
+                        <Button type="primary" onClick={addNewCategory}>
+                           Add
+                        </Button>
+                     </Space>
+                  </>
+               )}
+            >
+               {categoryList.map((cat, index) => (
+                  <Select.Option key={index} value={cat}>
+                     {cat}
+                  </Select.Option>
+               ))}
+            </Select>
          </Form.Item>
 
-         <Form.Item 
-         label="Action"
-         >
-            <Button style={{ marginRight:5, width:100, height:25} } type="primary" htmlType="submit">
+
+         <Form.Item style={{marginTop:"30px"}}>
+            <Button
+               type="primary"
+               htmlType="submit"
+               style={{ marginRight: 8 }}
+            >
                + Add Item
             </Button>
 
-            <Button style={{ marginRight:5, width:100 ,height:25} } type="default" onClick={handlResetBtn}>
+            <Button onClick={handlResetBtn}>
                Reset
             </Button>
-
          </Form.Item>
       </Form>
-   )
+   );
 }
 
-export default Items_add_form
+export default Items_add_form;
+
+
 
 // for manual
 

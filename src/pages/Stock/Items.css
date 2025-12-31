@@ -10,6 +10,7 @@
    padding: 20px;
    max-width: 1600px;
    margin: auto;
+   padding-bottom: 80px;
 }
 
 /* Form layout */
@@ -22,7 +23,6 @@
    border-radius: 10px;
    margin-bottom: 20px;
    background-color: #fafafa;
-   /* border: 1px solid red; */
 }
 
 /* Button group */
@@ -48,6 +48,10 @@
    margin-bottom: 20px;
    justify-content: center;
    flex-wrap: wrap;
+   padding: 15px;
+   background: #fafafa;
+   border-radius: 10px;
+   border: 1px solid #ddd;
 }
 
 /* Table styling */
@@ -56,7 +60,9 @@
    border-radius: 8px;
    overflow: hidden;
    padding: 10px;
-   margin-bottom: 200px;
+   max-height: 350px;
+   overflow-y: auto;
+   background: #fff;
 }
 
 /* Bold table headers */
@@ -78,49 +84,151 @@
    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 }
 
-
+/* ==================== MOBILE RESPONSIVE (max-width: 768px) ==================== */
 @media (max-width: 768px) {
+
+   /* Container */
    .items-container {
-      padding: 10px;
-      
+      padding: 8px;
+      padding-bottom: 60px;
    }
 
+   /* Form Section */
    .form-section {
       grid-template-columns: 1fr;
-      /* Stack inputs vertically */
       padding: 10px;
+      gap: 10px;
+      margin-bottom: 10px;
    }
 
    .btn-group {
       grid-column: span 1;
-      justify-content: center;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
+      gap: 8px;
    }
 
    .btn-group button {
       width: 100%;
-      max-width: 300px;
    }
 
+   /* Section Title */
+   .section-title {
+      font-size: 16px !important;
+      margin-bottom: 10px;
+   }
+
+   /* Filter Section */
    .filter-section {
       flex-direction: column;
       align-items: stretch;
-      gap: 10px;
+      gap: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
    }
 
-   .filter-section .ant-select,
-   .filter-section button {
+   .filter-section h4 {
+      text-align: center;
+      font-size: 13px !important;
+      margin: 0 !important;
+   }
+
+   .filter-section .ant-select {
+      width: 100% !important;
+   }
+
+   .filter-section .refresh-btn {
       width: 100%;
-      max-width: 300px;
+      display: flex;
+      justify-content: center;
+   }
+
+   .filter-section a {
+      width: 100%;
+   }
+
+   .filter-section a button {
+      width: 100%;
+   }
+
+   /* Table Section */
+   .table-section {
+      padding: 5px;
+      max-height: 280px;
+   }
+
+   /* Table Compact - No scroll, fit all columns */
+   .table-section .ant-table-thead th {
+      padding: 5px 3px !important;
+      font-size: 9px !important;
+   }
+
+   .table-section .ant-table-tbody td {
+      padding: 5px 3px !important;
+      font-size: 10px !important;
+      word-break: break-word;
+   }
+
+   /* Action Buttons Compact */
+   .table-section .ant-table-tbody td button {
+      padding: 0 3px !important;
+      font-size: 8px !important;
+      height: 20px !important;
+      width: 38px !important;
+      margin: 1px !important;
+   }
+
+   /* Logout */
+   .logout-section {
+      padding: 8px;
+   }
+
+   .logout-section button {
+      width: 150px;
+      height: 32px;
+      font-size: 12px;
+   }
+}
+
+/* Extra Small (below 400px) */
+@media (max-width: 400px) {
+
+   .items-container {
+      padding: 5px;
+   }
+
+   .form-section {
+      padding: 8px;
+   }
+
+   .filter-section {
+      padding: 8px;
+   }
+
+   .section-title {
+      font-size: 14px !important;
    }
 
    .table-section {
-      padding: 5px;
-
+      padding: 3px;
+      /* border: 1px solid red; */
+      margin-bottom: 100px;
    }
 
-   .logout-section {
-      padding: 10px;
+   .table-section .ant-table-thead th {
+      padding: 4px 2px !important;
+      font-size: 8px !important;
+   }
+
+   .table-section .ant-table-tbody td {
+      padding: 4px 2px !important;
+      font-size: 9px !important;
+   }
+
+   .table-section .ant-table-tbody td button {
+      padding: 0 2px !important;
+      font-size: 7px !important;
+      height: 18px !important;
+      width: 32px !important;
    }
 }

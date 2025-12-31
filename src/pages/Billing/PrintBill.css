@@ -1,14 +1,54 @@
+
+@media print {
+   @page {
+      size: 80mm auto;
+      /* 🔥 thermal width */
+      margin: 0;
+      /* no white space */
+   }
+
+   body {
+      margin: 0;
+      padding: 0;
+   }
+
+   .print-wrapper {
+      width: 80mm;
+      padding: 5mm;
+   }
+
+   /* Hide everything except bill */
+   body * {
+      visibility: hidden;
+   }
+
+   .print-wrapper,
+   .print-wrapper * {
+      visibility: visible;
+   }
+
+   .print-wrapper {
+      position: absolute;
+      left: 0;
+      top: 0;
+   }
+}
+
+
+
 .print-wrapper {
-   width: 340px;
+   width: 300px;
    padding: 10px;
    margin: auto;
-   font-family: Arial, sans-serif;
+   font-family: monospace;
+   /* thermal look */
 }
 
 .bill-container {
-   border: 2px solid #333;
+
+   border: 1px dashed #333;
    padding: 10px;
-   position: relative;
+   /* position: relative; */
 }
 
 .shop-title {
@@ -45,7 +85,7 @@
 
 .bill-table {
    width: 100%;
-   font-size: 18px;
+   font-size: 14px;
 }
 
 .bill-table td {
