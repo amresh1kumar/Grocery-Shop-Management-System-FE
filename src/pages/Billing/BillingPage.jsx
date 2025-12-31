@@ -455,7 +455,8 @@ const BillingPage = () => {
             pagination={false}
             size="small"
             rowKey="id"
-            scroll={{ y: 350 }}
+            scroll={{ y: "45vh" }}
+
           />
         </div>
 
@@ -502,9 +503,9 @@ const BillingPage = () => {
       </div>
 
       <div className="bottom-actions">
-        <Link to="/billingDashboard">
+        {/* <Link to="/billingDashboard">
           <Button className="dashboard-btn">Dashboard</Button>
-        </Link>
+        </Link> */}
         {/* <span className="total-display">Total: ₹0.00</span> */}
 
         <span className="total-display">Total: ₹{grandTotal.toFixed(2)}</span>

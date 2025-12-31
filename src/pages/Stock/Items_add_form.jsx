@@ -1,121 +1,3 @@
-// import React from 'react'
-// import {
-//    Input,
-//    Form,
-//    Button,
-//    Select,
-//    message
-// } from "antd";
-// import { AddProduct } from '../../api/productService'
-
-// const { Option } = Select;
-
-// function Items_add_form({ onSuccess }) {
-
-//    const [form] = Form.useForm();
-
-//    const handlResetBtn = () => {
-//       form.resetFields();
-//    }
-
-//    const onFinish = async (values) => {
-//       // console.log("🎯 Form submit!", values);  // ⬅️ Test log
-
-//       try {
-//          const response = await AddProduct(values);
-//          console.log("✅ Success:", response);
-
-//          message.success("Product added successfully!");
-//          form.resetFields();
-
-//          if (onSuccess) {
-//             onSuccess();
-//          }
-
-//       } catch (error) {
-//          message.error("Failed to add product!");
-//       }
-//    }
-//    const onFinishFailed = (errorInfo) => {
-//       console.log("❌ Validation failed:", errorInfo);
-//    }
-
-//    return (
-//       <Form
-//          form={form}
-//          onFinish={onFinish}
-//          onFinishFailed={onFinishFailed}
-//          className="form-section"
-//          layout="vertical"
-//       >
-//          <Form.Item
-//             label="Item Name"
-//             name="item_name"
-//             rules={[{ required: true, message: 'Please enter item name!' }]}
-//          >
-//             <Input placeholder="Enter Item Name" />
-//          </Form.Item>
-
-//          <Form.Item
-//             label="Quantity"
-//             name="item_qty"
-//             rules={[{ required: true, message: 'Please enter quantity!' }]}
-//          >
-//             <Input type="number" placeholder="Enter Item Quantity" />
-//          </Form.Item>
-
-//          <Form.Item
-//             label="Price"
-//             name="item_price"
-//             rules={[{ required: true, message: 'Please enter price!' }]}
-//          >
-//             <Input type="number" placeholder="Enter Item Price" />
-//          </Form.Item>
-
-//          <Form.Item
-//             label="Category"
-//             name="item_category"
-//             rules={[{ required: true, message: 'Please select category!' }]}
-//          >
-//             <Input placeholder="Enter Item Category" />
-//          </Form.Item>
-
-//          <Select
-//             showSearch
-//             allowClear
-//             style={{ width: 200 }}
-//             placeholder="Select Category"
-//             onChange={(value) =>
-//                setFilters((prev) => ({ ...prev, item_category: value || "" }))
-//             }
-//          >
-//             {categories.map((cat, index) => (
-//                <Option key={index} value={cat}>
-//                   {cat}
-//                </Option>
-//             ))}
-//          </Select>
-
-//          <Form.Item
-//             label="Action"
-//          >
-//             <Button style={{ marginRight: 5, width: 100, height: 25 }} type="primary" htmlType="submit">
-//                + Add Item
-//             </Button>
-
-//             <Button style={{ marginRight: 5, width: 100, height: 25 }} type="default" onClick={handlResetBtn}>
-//                Reset
-//             </Button>
-
-//          </Form.Item>
-//       </Form>
-//    )
-// }
-
-// export default Items_add_form
-
-
-
 import React, { useState, useEffect } from 'react'
 import {
    Input,
@@ -206,7 +88,6 @@ function Items_add_form({ onSuccess, categories = [] }) {
             <Input type="number" placeholder="Enter Item Price" />
          </Form.Item>
 
-         {/* ✅ CATEGORY (SELECT + ADD NEW) */}
          <Form.Item
             label="Category"
             name="item_category"
@@ -244,7 +125,7 @@ function Items_add_form({ onSuccess, categories = [] }) {
          </Form.Item>
 
 
-         <Form.Item>
+         <Form.Item style={{marginTop:"30px"}}>
             <Button
                type="primary"
                htmlType="submit"

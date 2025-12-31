@@ -17,6 +17,8 @@ import "../../Components/Common.css";
 import { ProductsList, DeleteProduct, UpdateProduct } from "../../api/productService"
 import Items_add_form from "./Items_add_form";
 import { AuthContext } from "../../auth/AuthProvider";
+import { Popconfirm } from "antd";
+
 
 function Items() {
 
@@ -62,9 +64,24 @@ function Items() {
                >
                   Update
                </Button>
-               <Button style={{ padding: 0, width: 70 }} danger onClick={() => handleDelete(record.id)}>
+               {/* <Button style={{ padding: 0, width: 70 }} danger onClick={() => handleDelete(record.id)}>
                   Delete
-               </Button>
+               </Button> */}
+
+               <Popconfirm
+                  title="Are you sure?"
+                  description="This product will be permanently deleted."
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={() => handleDelete(record.id)}
+               >
+                  <Button
+                     style={{ padding: 0, width: 70 }}
+                     danger
+                  >
+                     Delete
+                  </Button>
+               </Popconfirm>
             </>
 
          ),
@@ -155,9 +172,6 @@ function Items() {
       logout();
       navigate("/", { replace: true });
    };
-
-
-
 
    return (
       <div className="items-container">

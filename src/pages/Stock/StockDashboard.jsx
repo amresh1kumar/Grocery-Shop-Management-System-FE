@@ -42,10 +42,9 @@ function StockDashboard() {
    const fetchDashboard = async () => {
       try {
          const res = await DashboardSummary();
-         console.log("Dashboard API Response:", res);
          setStats(res.data);
       } catch (error) {
-         console.log("Dashboard error:", error);
+         console.error("Dashboard error:", error);
       } finally {
          setLoading(false);
       }
@@ -62,9 +61,10 @@ function StockDashboard() {
    return (
       <div className="dashboard-container">
 
-         <Row gutter={16}>
-            <Col span={8}>
-               <Card>
+         {/* ===== STAT CARDS ===== */}
+         <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={8}>
+               <Card className="dashboard-card">
                   <Statistic
                      title="Total Items in Stock"
                      value={stats?.total_items}
@@ -73,8 +73,8 @@ function StockDashboard() {
                </Card>
             </Col>
 
-            <Col span={8}>
-               <Card>
+            <Col xs={24} sm={12} md={8}>
+               <Card className="dashboard-card">
                   <Statistic
                      title="Total Categories"
                      value={stats?.total_categories}
@@ -83,8 +83,8 @@ function StockDashboard() {
                </Card>
             </Col>
 
-            <Col span={8}>
-               <Card>
+            <Col xs={24} sm={24} md={8}>
+               <Card className="dashboard-card">
                   <Statistic
                      title="Total Stock Value (₹)"
                      value={stats?.total_value}
@@ -94,6 +94,7 @@ function StockDashboard() {
             </Col>
          </Row>
 
+         {/* ===== TABLE ===== */}
          <h2 className="dashboard-subtitle">Stock Summary Table</h2>
 
          <Table
@@ -102,11 +103,9 @@ function StockDashboard() {
             pagination={false}
             rowKey="id"
             size="small"
-            scroll={{ y: 300 }}
-
+            scroll={{ x: "max-content", y: 300 }}
          />
       </div>
-
    );
 }
 

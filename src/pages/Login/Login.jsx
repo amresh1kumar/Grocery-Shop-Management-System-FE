@@ -20,7 +20,7 @@ const Login = () => {
       };
       const res = await login(payload);
       if (res.tokens?.access) {
-        contextLogin(res.tokens.access); // 🔥 CONTEXT LOGIN
+        contextLogin(res.tokens.access);
         message.success("Login successful!");
         navigate("/stocks", { replace: true });
       }
@@ -71,14 +71,14 @@ const Login = () => {
           />
         </Form.Item>
 
-        <Form.Item className="rem-forgot">
+        {/* <Form.Item className="rem-forgot">
           <div className="rem-forgot-inner">
             <Checkbox>Remember me</Checkbox>
             <Link to="/forgot-password" style={{ float: "right" }}>
               Forgot Password?
             </Link>
           </div>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item className="login-btn">
           <Button type="primary" htmlType="submit" className="login-btn-full">

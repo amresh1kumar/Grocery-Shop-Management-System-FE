@@ -1,13 +1,10 @@
-/* Center the form in the middle of the screen */
 .login-form {
    display: flex;
    justify-content: center;
    align-items: center;
    min-height: 100vh;
-   /* border: 1px solid red; */
 }
 
-/* Wrap content in a card-like box */
 .all-items {
    border: 1px dotted gray;
    padding: 30px;
@@ -18,7 +15,6 @@
    border-radius: 10px;
 }
 
-/* Logo styling */
 .logo {
    display: block;
    margin: 10px auto 40px;
@@ -26,19 +22,16 @@
    /* border: 1px solid red; */
 }
 
-/* Input field spacing */
 .input-field {
    padding: 10px;
 }
 
-/* Remember + Forgot Password layout */
 .rem-forgot-inner {
    display: flex;
    justify-content: space-between;
    align-items: center;
 }
 
-/* Button spacing */
 .login-btn {
    text-align: center;
    margin-top: 10px;
@@ -51,7 +44,6 @@
    font-weight: 500;
 }
 
-/* Centered sign up link */
 .signup-link {
    text-align: center;
    margin-top: 20px;

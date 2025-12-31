@@ -66,7 +66,7 @@ function App() {
           path="/billing"
           element={
             // <ProtectedRoute>
-              <BillingPage />
+            <BillingPage />
             // </ProtectedRoute>
           }
         />
@@ -84,7 +84,7 @@ function App() {
           path="/billingDashboard"
           element={
             // <ProtectedRoute>
-              <Dashboard />
+            <Dashboard />
             // </ProtectedRoute>
           }
         />

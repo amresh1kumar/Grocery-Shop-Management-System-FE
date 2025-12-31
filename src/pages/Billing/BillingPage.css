@@ -1,132 +1,3 @@
-/* .billing-container {
-   padding: 0 20px;
-   background: #fff;
-   color: #333;
-   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-   height: 100vh;
-}
-
-.header-title {
-   font-size: 1.8rem;
-   text-align: center;
-   color: #1890ff;
-   font-weight: bold;
-   margin-bottom: 8px;
-}
-
-.billing-form {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 12px;
-   justify-content: center;
-   margin-bottom: 10px;
-}
-
-.filter-section {
-   display: flex;
-   align-items: center;
-   gap: 10px;
-   justify-content: center;
-   margin: 20px 0;
-}
-
-.refresh-btn {
-   font-size: 18px;
-}
-
-.report-btn {
-   border: none;
-   background-color: #52c41a;
-   color: white;
-}
-
-.data-table-section {
-   display: flex;
-   gap: 10px;
-   max-height: 400px !important;
-
-}
-
-.billing-items-left {
-   width: 40%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   padding: 10px;
-   max-height: 400px !important;
-   overflow-y: hidden;
-}
-
-.client-list {
-   width: 25%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   max-height: 400px;
-
-   overflow-y: auto;
-}
-
-.bill-list {
-   width: 35%;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   max-height: 400px;
-   overflow-y: auto;
-}
-
-.billing-items-header {
-   display: flex;
-   justify-content: space-between;
-   font-weight: bold;
-   background-color: #f5f5f5;
-   border-bottom: 1px solid #ddd;
-   padding: 10px;
-   font-size: 16px;
-   color: #333;
-}
-
-.billing-col {
-   flex: 1;
-   text-align: center;
-}
-
-.item-id {
-   flex: 2;
-}
-
-.client-list .ant-table-thead th {
-   font-weight: 700 !important;
-   font-size: 1rem;
-   background-color: #fafafa;
-   text-align: center;
-}
-
-.bottom-actions {
-   display: flex;
-   justify-content: space-around !important;
-   align-items: center;
-   width: 100%;
-   padding: 0 20px !important;
-   position: fixed;
-   bottom: 0;
-  
-}
-
-.dashboard-btn,
-.logout-btn {
-   background-color: red;
-   color: white;
-}
-
-.total-display {
-   font-weight: bold;
-   font-size: 18px;
-   color: red;
-} */
-
-
-/* ===============================
-   RESET
-   =============================== */
 * {
    box-sizing: border-box;
 }
@@ -138,19 +9,14 @@ body {
    background: #f5f7fa;
 }
 
-/* ===============================
-   PAGE CONTAINER
-   =============================== */
 .billing-container {
-   padding: 12px 16px 120px;
+   padding: 0px 16px 0px 16px;
    background: #fff;
-   min-height: 100vh;
+   /* max-height: 70vh; */
    overflow-x: hidden;
+   /* border: 1px solid red; */
 }
 
-/* ===============================
-   HEADER
-   =============================== */
 .header-title {
    font-size: 1.8rem;
    text-align: center;
@@ -159,42 +25,39 @@ body {
    margin-bottom: 10px;
 }
 
-/* ===============================
-   FORM
-   =============================== */
 .billing-form {
    display: flex;
    flex-wrap: wrap;
    gap: 10px;
    justify-content: center;
    margin-bottom: 12px;
+
 }
 
-/* ===============================
-   DATA TABLE SECTION
-   =============================== */
 .data-table-section {
    display: flex;
    gap: 10px;
    width: 100%;
    height: 420px;
    overflow-x: hidden;
+
    /* 🔑 critical */
 }
 
-/* ===============================
-   COLUMNS (NO % WIDTHS)
-   =============================== */
+
 .billing-items-left {
    flex: 0 0 40%;
+
 }
 
 .bill-list {
    flex: 0 0 35%;
+
 }
 
 .client-list {
    flex: 0 0 25%;
+
 }
 
 .billing-items-left,
@@ -206,31 +69,27 @@ body {
    flex-direction: column;
    background: #fff;
    overflow: hidden;
+
 }
 
-/* ===============================
-   TABLE SCROLL
-   =============================== */
+
 .ant-table-wrapper {
    flex: 1;
 }
 
 .ant-table-body {
    overflow-y: auto !important;
+
 }
 
-/* ===============================
-   TABLE HEADERS
-   =============================== */
+
 .ant-table-thead th {
    background: #f9f9f9 !important;
    font-weight: 600 !important;
    text-align: center;
+
 }
 
-/* ===============================
-   BOTTOM FIXED BAR
-   =============================== */
 .bottom-actions {
    position: fixed;
    bottom: 0;
@@ -243,12 +102,15 @@ body {
    justify-content: space-between;
    align-items: center;
    z-index: 1000;
+
+
 }
 
 .total-display {
    font-weight: 700;
    font-size: 18px;
    color: #e53935;
+   /* border: 1px solid red; */
 }
 
 /* ===============================
@@ -256,7 +118,6 @@ body {
    =============================== */
 @media (max-width: 768px) {
 
-   /* Global safety */
    body {
       overflow-x: hidden;
    }
@@ -275,9 +136,7 @@ body {
       margin-bottom: 8px;
    }
 
-   /* ===============================
-     FORM → COLUMN
-     =============================== */
+
    .billing-form {
       display: flex;
       flex-direction: column;
@@ -289,9 +148,6 @@ body {
       width: 100%;
    }
 
-   /* ===============================
-     DATA SECTION → COLUMN
-     =============================== */
    .data-table-section {
       display: flex;
       flex-direction: column;
@@ -300,7 +156,6 @@ body {
       height: auto;
    }
 
-   /* Each block full width */
    .billing-items-left,
    .bill-list,
    .client-list {
